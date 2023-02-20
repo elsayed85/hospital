@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Hospital;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,5 +16,10 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
+    if (request("run") == 1) {
+        Hospital::all()->runForEach(function () {
+            App\Models\User::factory(10)->create();
+        });
+    }
     return view('welcome');
 });

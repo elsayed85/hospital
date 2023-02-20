@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Facade;
+use Webpatser\Countries\CountriesFacade;
+use Webpatser\Countries\CountriesServiceProvider;
 
 return [
 
@@ -185,7 +187,7 @@ return [
         /*
          * Package Service Providers...
          */
-
+        CountriesServiceProvider::class,
         /*
          * Application Service Providers...
          */
@@ -194,6 +196,7 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        App\Providers\TenancyServiceProvider::class,
 
     ],
 
@@ -210,6 +213,7 @@ return [
 
     'aliases' => Facade::defaultAliases()->merge([
         // 'ExampleClass' => App\Example\ExampleClass::class,
+        'Countries' => CountriesFacade::class,
     ])->toArray(),
 
 ];
