@@ -4,7 +4,9 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\Hospital;
+use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class DatabaseSeeder extends Seeder
 {
@@ -18,9 +20,21 @@ class DatabaseSeeder extends Seeder
         //Seed the countries
         $this->call(CountriesSeeder::class);
         $this->command->info('Seeded the countries!');
-        dd("Seeded the countries!");
+
         $local_env = env('APP_ENV');
         if ($local_env == "local") {
+            // select databases that start with hospital
+            $tenets = DB::select('SHOW DATABASES LIKE "hospital%"');
+            foreach ($tenets as $tenet) {
+                // drop the databases
+                $t = array_values((array) $tenet)[0];
+                if ($t != "hospital")
+                    DB::statement(DB::raw('DROP DATABASE `' . $t . '`'));
+            }
+
+            $this->command->info('Dropped the databases!');
+
+            // Seed the hospitals
             $tenants = [
                 'hospital1',
                 'hospital2',
@@ -36,6 +50,12 @@ class DatabaseSeeder extends Seeder
                 ]);
                 $hospital->createDomain($domain);
             }
+
+            Hospital::all()->runForEach(function () {
+                User::factory(10)->create();
+            });
+
+            $this->command->info('Seeded the hospitals (Tennats)!');
         }
     }
 }

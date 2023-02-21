@@ -16,10 +16,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    if (request("run") == 1) {
-        Hospital::all()->runForEach(function () {
-            App\Models\User::factory(10)->create();
-        });
-    }
+    // auth : login , register ..
+    // acccount settings
+    // features & usage // https://github.com/elsayed85/subscriptions
     return view('welcome');
 });

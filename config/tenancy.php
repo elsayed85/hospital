@@ -6,6 +6,17 @@ use App\Models\Domain;
 use App\Models\Hospital;
 use Stancl\Tenancy\Database\Models\Tenant;
 
+$modules = array_filter(
+    json_decode(
+        file_get_contents(base_path('modules_statuses.json')),
+        true
+    )
+);
+
+foreach (array_keys($modules) as $module) {
+    $paths[] = base_path("Modules/$module/Database/Migrations/tenant");
+}
+
 return [
     'tenant_model' => Hospital::class,
     'id_generator' => Stancl\Tenancy\UUIDGenerator::class,
@@ -183,9 +194,12 @@ return [
     /**
      * Parameters used by the tenants:migrate command.
      */
+
     'migration_parameters' => [
         '--force' => true, // This needs to be true to run migrations in production.
-        '--path' => [database_path('migrations/hospital')],
+        '--path' => array_merge([
+            database_path('migrations/hospital')
+        ], $paths),
         '--realpath' => true,
     ],
 

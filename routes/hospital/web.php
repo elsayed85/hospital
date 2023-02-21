@@ -2,6 +2,9 @@
 
 declare(strict_types=1);
 
+use App\Models\Feature\Feature;
+use App\Models\Feature\FeatureUsage;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
@@ -19,5 +22,5 @@ use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 */
 
 Route::get('/', function () {
-   dd(hospital());
+    dd(FeatureUsage::all());
 });
