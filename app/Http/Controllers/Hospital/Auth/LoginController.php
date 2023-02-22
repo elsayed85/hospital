@@ -12,18 +12,33 @@ class LoginController extends Controller
 {
     public function showLoginFrom($type = null)
     {
+        $type = $type ?? request('type', 'nurse');
         $pageConfigs = ['myLayout' => 'blank'];
         $types = collect(config('login.types'));
+
         $logged_in_as = $types->map(function ($el) {
             $guard = $el['guard'];
             return auth($guard)->check();
-        })->toArray();
+        });
+
+        $guests = $logged_in_as->filter(function ($el) {
+            return $el === false;
+        });
+
+        // select first guest if guests count is equal to 1
+        if ($guests->count() === 1) {
+            $type = $guests->keys()->first();
+        }
+
+        // if all are logged in then disable login form
+        $disabled = $guests->count() === 0;
 
         return view('auth.login', [
             'pageConfigs' => $pageConfigs,
             'route_type' => $type,
             'types' => $types,
-            'logged_in_as' => $logged_in_as,
+            'logged_in_as' => $logged_in_as->toArray(),
+            'disabled' => $disabled
         ]);
     }
 

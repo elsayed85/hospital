@@ -1,6 +1,7 @@
 <?php
 
 use Modules\Nurse\Http\Controllers\HomeController;
+use Modules\Nurse\Http\Controllers\LogoutController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,3 +15,4 @@ use Modules\Nurse\Http\Controllers\HomeController;
 */
 
 Route::get('/', [HomeController::class, "index"])->name('home');
+Route::post('logout', [LogoutController::class, "logout"])->name('logout');

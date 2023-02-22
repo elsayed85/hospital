@@ -1,6 +1,7 @@
 <?php
 
 use Modules\Employee\Http\Controllers\HomeController;
+use Modules\Employee\Http\Controllers\LogoutController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,4 +15,5 @@ use Modules\Employee\Http\Controllers\HomeController;
 */
 
 Route::get('/', [HomeController::class, "index"])->name('home');
+Route::post('logout', [LogoutController::class, "logout"])->name('logout');
 

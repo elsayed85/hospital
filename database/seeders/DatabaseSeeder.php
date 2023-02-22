@@ -6,6 +6,7 @@ namespace Database\Seeders;
 use App\Models\Hospital;
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Modules\Doctor\Entities\Doctor;
 use Modules\Employee\Entities\Employee;
@@ -59,6 +60,10 @@ class DatabaseSeeder extends Seeder
                 Nurse::factory()->count(3)->create();
                 Employee::factory()->count(3)->create();
             });
+
+            Artisan::call("module:seed Doctor");
+            Artisan::call("module:seed Employee");
+            Artisan::call("module:seed Nurse");
 
             $this->command->info('Seeded the hospitals (Tennats)!');
         }

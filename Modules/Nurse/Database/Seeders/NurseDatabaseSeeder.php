@@ -15,8 +15,6 @@ class NurseDatabaseSeeder extends Seeder
      */
     public function run()
     {
-        Model::unguard();
-
-        Nurse::factory()->count(10)->create();
+        //
     }
 }

@@ -20,35 +20,26 @@ class RolesAndPermissionsSeeder extends Seeder
      */
     public function run()
     {
-        Hospital::all()->runForEach(function () {
+        $guard = config('login.types.employee.guard');
+        Hospital::all()->runForEach(function () use ($guard) {
             // Reset cached roles and permissions
             app()[PermissionRegistrar::class]->forgetCachedPermissions();
 
-            // Schema::disableForeignKeyConstraints();
-            // Role::truncate();
-            // Permission::truncate();
-            // DB::table('role_has_permissions')->truncate();
-            // Schema::enableForeignKeyConstraints();
+            Schema::disableForeignKeyConstraints();
+            $roles = Role::where('guard_name', $guard)->get("id")->pluck('id');
+            Role::whereIn('id', $roles)->delete();
+            $permissions = Permission::where('guard_name', $guard)->get("id")->pluck('id');
+            Permission::whereIn('id', $permissions)->delete();
+            DB::table('role_has_permissions')
+                ->where(function ($q) use ($roles, $permissions) {
+                    $q
+                        ->whereIn('role_id', $roles->pluck('id'))
+                        ->orWhereIn('permission_id', $permissions->pluck('id'));
+                })
+                ->delete();
+            Schema::enableForeignKeyConstraints();
 
-            $permissions = [
-                "admin" => [
-                    "show roles",
-                    "create roles",
-                    "edit roles",
-                    "delete roles",
-
-                    "show permissions",
-                ],
-                "super_admin" => [
-                    "show roles",
-                    "create roles",
-                    "edit roles",
-                    "delete roles",
-                    "restore roles",
-
-                    "show permissions",
-                ]
-            ];
+            $permissions = config('employee.permissions');
 
             $admin_permissions = [];
 
@@ -56,11 +47,11 @@ class RolesAndPermissionsSeeder extends Seeder
                 $admin_permissions[] = Permission::firstOrCreate(
                     [
                         'name' => $permission,
-                        "guard_name" => config('login.types.employee.guard')
+                        "guard_name" => $guard
                     ],
                     [
                         'name' => $permission,
-                        "guard_name" => config('login.types.employee.guard')
+                        "guard_name" => $guard
                     ]
                 );
             }
@@ -74,11 +65,11 @@ class RolesAndPermissionsSeeder extends Seeder
                 $all_permissions[] = Permission::firstOrCreate(
                     [
                         'name' => $permission,
-                        "guard_name" => config('login.types.employee.guard')
+                        "guard_name" => $guard
                     ],
                     [
                         'name' => $permission,
-                        "guard_name" => config('login.types.employee.guard')
+                        "guard_name" => $guard
                     ]
                 );
             }
@@ -86,22 +77,21 @@ class RolesAndPermissionsSeeder extends Seeder
 
             $regular = Role::create([
                 'name' => 'regular',
-                "guard_name" => config('login.types.employee.guard')
+                "guard_name" => $guard
             ]);
 
 
             $admin = Role::create([
                 'name' => 'admin',
-                "guard_name" => config('login.types.employee.guard')
+                "guard_name" => $guard
             ]);
 
             $admin->givePermissionTo($admin_permissions);
 
             $super_admin = Role::create([
                 'name' => 'super admin',
-                "guard_name" => config('login.types.employee.guard')
+                "guard_name" => $guard
             ]);
-            $super_admin->givePermissionTo($all_permissions);
         });
     }
 }

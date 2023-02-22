@@ -2,11 +2,11 @@
 
 namespace Modules\Doctor\Providers;
 
+use App\Http\Middleware\Hospital\ScopeSessions;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Route;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomainOrSubdomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
-use Stancl\Tenancy\Middleware\ScopeSessions;
 
 class RouteServiceProvider extends ServiceProvider
 {

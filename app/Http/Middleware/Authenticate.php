@@ -14,8 +14,10 @@ class Authenticate extends Middleware
      */
     protected function redirectTo($request)
     {
-        if (! $request->expectsJson()) {
-            return route('login');
+        if (!$request->expectsJson()) {
+            $user_type = $request->segment(1);
+            // abort(403);
+            return route('hospital.login', ['type' => $user_type]);
         }
     }
 }

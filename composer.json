@@ -13,6 +13,7 @@
         "laravel/sanctum": "^3.0",
         "laravel/tinker": "^2.7",
         "nwidart/laravel-modules": "^9.0",
+        "outhebox/laravel-translations": "^0.0.6",
         "spatie/laravel-permission": "^5.9",
         "stancl/tenancy": "^3.7",
         "webpatser/laravel-countries": "^1.5"
@@ -35,7 +36,9 @@
         },
         "files": [
             "app/Helpers/app.php",
-            "app/Helpers/front_theme.php"
+            "app/Helpers/front_theme.php",
+            "app/Helpers/Hospital/app.php",
+            "app/Helpers/Hospital/roles.php"
         ]
     },
     "autoload-dev": {

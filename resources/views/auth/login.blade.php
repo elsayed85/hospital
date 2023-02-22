@@ -5,7 +5,7 @@
 
 @extends('layouts/layoutMaster')
 
-@section('title', 'Multi Steps Sign-up - Pages')
+@section('title', __("pages.login.title"))
 
 @section('vendor-style')
     <!-- Vendor -->
@@ -29,6 +29,27 @@
     <script src="{{ asset('/vendor/libs/formvalidation/dist/js/plugins/Bootstrap5.min.js') }}"></script>
     <script src="{{ asset('/vendor/libs/formvalidation/dist/js/plugins/AutoFocus.min.js') }}"></script>
     <script src="{{ asset('assets/vendor/libs/jquery-sticky/jquery-sticky.js') }}"></script>
+    <script>
+        // Check selected custom option
+        window.Helpers.initCustomOptionCheck();
+        @foreach ($types as $index => $type)
+            $('#logout_btn_{{ $index }}').on('click', function() {
+                $.ajax({
+                    url: "{{ route($index. '.logout') }}",
+                    type: "POST",
+                    data: {
+                        _token: "{{ csrf_token() }}",
+                        type: "{{ $index }}"
+                    },
+                    success: function(response) {
+                        if (response.status == 'success') {
+                            window.location.reload();
+                        }
+                    }
+                });
+            });
+        @endforeach
+    </script>
 @endsection
 
 @section('page-script')
@@ -67,7 +88,7 @@
                         {{ __('login.welcome_message_description') }}
                     </p>
 
-                    <form id="formAuthentication" class="mb-3" action="{{ route('login') }}" method="Post">
+                    <form id="formAuthentication" class="mb-3" action="{{ route('hospital.login') }}" method="Post">
                         @csrf
                         <h5 class="my-4">
                             1. {{ __('login.select_your_account_type') }}
@@ -81,7 +102,7 @@
                                                 <i class='bx bx-briefcase-alt-2'></i>
                                                 <span class="custom-option-title"> {{ __($type['name']) }} </span>
                                                 @if (isset($type['hint']) && $logged_in_as[$index] == false)
-                                                    <small>{{ $type['hint'] }}</small>
+                                                    <small>{{ __($type['hint']) }}</small>
                                                 @elseif ($logged_in_as[$index] == true)
                                                     <small>{{ __('login.already_logged_in') }}</small>
                                                     <button class="btn btn-danger d-grid w-100"
@@ -101,6 +122,7 @@
                             @endforeach
                         </div>
                         <hr>
+                        @if(!$disabled)
                         <h5 class="my-4">
                             2. {{ __('login.enter_your_credentials') }}
                         </h5>
@@ -138,20 +160,11 @@
                         <button class="btn btn-primary d-grid w-100">
                             {{ __('login.login_button') }}
                         </button>
+                        @endif
                     </form>
                 </div>
             </div>
             <!-- /Login -->
         </div>
     </div>
-
-    <script>
-        // Check selected custom option
-        window.Helpers.initCustomOptionCheck();
-        @foreach ($types as $index => $type)
-            $("button#logout_btn_{{ $index }}").click(function() {
-                
-            });
-        @endforeach
-    </script>
 @endsection

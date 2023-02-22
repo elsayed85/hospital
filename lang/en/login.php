@@ -10,11 +10,11 @@ return [
     "doctor" => "Doctor",
     "doctor_hint" => "Login as a doctor",
 
-    "admin" => "Admin",
-    "admin_hint" => "Login as an admin",
-
     "nurse" => "Nurse",
     "nurse_hint" => "Login as a nurse",
+
+    "employee" => "Employee",
+    "employee_hint" => "Login as an employee",
 
     "email_or_username" => "Email or username",
     "email_or_username_placeholder" => "Enter your email or username",

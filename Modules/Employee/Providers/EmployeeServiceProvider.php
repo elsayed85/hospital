@@ -2,8 +2,9 @@
 
 namespace Modules\Employee\Providers;
 
-use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
+use Illuminate\Support\ServiceProvider;
+use Modules\Employee\Providers\AuthServiceProvider;
 
 class EmployeeServiceProvider extends ServiceProvider
 {
@@ -38,6 +39,7 @@ class EmployeeServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->register(RouteServiceProvider::class);
+        $this->app->register(AuthServiceProvider::class);
     }
 
     /**

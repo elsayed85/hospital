@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use App\Http\Middleware\Hospital\ScopeSessions;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
@@ -18,7 +19,6 @@ use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomainOrSubdomain;
 use Stancl\Tenancy\Middleware\InitializeTenancyBySubdomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
-use Stancl\Tenancy\Middleware\ScopeSessions;
 
 class TenancyServiceProvider extends ServiceProvider
 {
@@ -152,6 +152,7 @@ class TenancyServiceProvider extends ServiceProvider
                 PreventAccessFromCentralDomains::class,
                 ScopeSessions::class, // https://tenancyforlaravel.com/docs/v3/session-scoping
             ])
+                ->name("hospital.")
                 ->namespace(static::$controllerNamespace)
                 ->group($file);
         }

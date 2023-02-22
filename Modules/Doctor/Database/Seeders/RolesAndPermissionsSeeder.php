@@ -21,53 +21,27 @@ class RolesAndPermissionsSeeder extends Seeder
      */
     public function run()
     {
-        Hospital::all()->runForEach(function () {
+        $guard = config('login.types.doctor.guard');
+        Hospital::all()->runForEach(function () use ($guard) {
             // Reset cached roles and permissions
             app()[PermissionRegistrar::class]->forgetCachedPermissions();
 
             Schema::disableForeignKeyConstraints();
-            Role::truncate();
-            Permission::truncate();
-            DB::table('role_has_permissions')->truncate();
+            $roles = Role::where('guard_name', $guard)->get("id")->pluck('id');
+            Role::whereIn('id', $roles)->delete();
+            $permissions = Permission::where('guard_name', $guard)->get("id")->pluck('id');
+            Permission::whereIn('id', $permissions)->delete();
+            DB::table('role_has_permissions')
+                ->where(function ($q) use ($roles, $permissions) {
+                    $q
+                        ->whereIn('role_id', $roles->pluck('id'))
+                        ->orWhereIn('permission_id', $permissions->pluck('id'));
+                })
+                ->delete();
             Schema::enableForeignKeyConstraints();
 
-            $permissions = [
-                "admin" => [
-                    "show roles",
+            $permissions = config('doctor.permissions');
 
-                    "show permissions",
-
-                    "show doctors",
-                    "create doctors",
-                    "edit doctors",
-                    "delete doctors",
-
-                    "show nurses",
-                    "create nurses",
-                    "edit nurses",
-                    "delete nurses",
-                ],
-                "super_admin" => [
-                    "show roles",
-                    "create roles",
-                    "edit roles",
-                    "delete roles",
-
-                    "show permissions",
-
-                    "show doctors",
-                    "create doctors",
-                    "edit doctors",
-                    "delete doctors",
-                    "restore doctors",
-
-                    "show nurses",
-                    "create nurses",
-                    "edit nurses",
-                    "delete nurses",
-                    "restore nurses",
-                ],
-            ];
 
             $admin_permissions = [];
 
@@ -102,24 +76,21 @@ class RolesAndPermissionsSeeder extends Seeder
                 );
             }
 
-            $regular = Role::create([
-                'name' => 'regular',
-                "guard_name" => config('login.types.doctor.guard')
-            ]);
+            $roles = collect(config('doctor.roles'))->map(function ($role) {
+                return Role::create([
+                    'name' => $role,
+                    "guard_name" => config('login.types.doctor.guard')
+                ]);
+            });
 
 
-            $admin = Role::create([
-                'name' => 'admin',
-                "guard_name" => config('login.types.doctor.guard')
-            ]);
-
+            $admin = $roles->firstWhere('name', "=", "admin");
             $admin->givePermissionTo($admin_permissions);
 
-            $super_admin = Role::create([
-                'name' => 'super admin',
-                "guard_name" => config('login.types.doctor.guard')
-            ]);
+            $super_admin = $roles->firstWhere('name', "=", "super admin");
             $super_admin->givePermissionTo($all_permissions);
+            // dd($admin->permissions->count() , $super_admin->permissions->count());
+
         });
     }
 }

@@ -531,7 +531,7 @@
                         @else
                             <li>
                                 <a class="dropdown-item"
-                                    href="{{ Route::has('login') ? route('login') : 'javascript:void(0)' }}">
+                                    href="{{ Route::has('hospital.login') ? route('hospital.login') : 'javascript:void(0)' }}">
                                     <i class='bx bx-log-in me-2'></i>
                                     <span class="align-middle">Login</span>
                                 </a>

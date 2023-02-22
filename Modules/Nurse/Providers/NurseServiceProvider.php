@@ -2,8 +2,9 @@
 
 namespace Modules\Nurse\Providers;
 
-use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
+use Illuminate\Support\ServiceProvider;
+use Modules\Nurse\Providers\AuthServiceProvider;
 
 class NurseServiceProvider extends ServiceProvider
 {
@@ -38,6 +39,7 @@ class NurseServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->register(RouteServiceProvider::class);
+        $this->app->register(AuthServiceProvider::class);
     }
 
     /**

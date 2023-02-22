@@ -12,5 +12,7 @@
 */
 
 use Modules\Doctor\Http\Controllers\HomeController;
+use Modules\Doctor\Http\Controllers\LogoutController;
 
 Route::get('/', [HomeController::class, "index"])->name('home');
+Route::post('logout', [LogoutController::class, "logout"])->name('logout');
