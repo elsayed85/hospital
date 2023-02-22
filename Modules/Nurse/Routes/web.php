@@ -1,5 +1,7 @@
 <?php
 
+use Modules\Nurse\Http\Controllers\HomeController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -11,6 +13,4 @@
 |
 */
 
-Route::prefix('nurse')->group(function() {
-    Route::get('/', 'NurseController@index');
-});
+Route::get('/', [HomeController::class, "index"])->name('home');

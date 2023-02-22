@@ -7,6 +7,9 @@ use App\Models\Hospital;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Modules\Doctor\Entities\Doctor;
+use Modules\Employee\Entities\Employee;
+use Modules\Nurse\Entities\Nurse;
 
 class DatabaseSeeder extends Seeder
 {
@@ -52,7 +55,9 @@ class DatabaseSeeder extends Seeder
             }
 
             Hospital::all()->runForEach(function () {
-                User::factory(10)->create();
+                Doctor::factory()->count(3)->create();
+                Nurse::factory()->count(3)->create();
+                Employee::factory()->count(3)->create();
             });
 
             $this->command->info('Seeded the hospitals (Tennats)!');

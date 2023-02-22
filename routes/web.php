@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Doctor;
 use App\Models\Hospital;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
@@ -16,8 +17,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    // auth : login , register ..
-    // acccount settings
-    // features & usage // https://github.com/elsayed85/subscriptions
-    return view('welcome');
+    $user = auth()->user();
+    $doctor = auth("doctor")->user();
+    $doctors = Doctor::all();
+    dd($user, $doctor, $doctors);
 });

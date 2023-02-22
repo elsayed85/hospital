@@ -2,9 +2,11 @@
 
 namespace Modules\Nurse\Providers;
 
-use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
+use Illuminate\Support\Facades\Route;
+use Stancl\Tenancy\Middleware\InitializeTenancyByDomainOrSubdomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
+use Stancl\Tenancy\Middleware\ScopeSessions;
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -49,9 +51,14 @@ class RouteServiceProvider extends ServiceProvider
     protected function mapWebRoutes()
     {
         Route::middleware([
-            'web',
-            PreventAccessFromCentralDomains::class
+            "web",
+            "auth:nurse",
+            InitializeTenancyByDomainOrSubdomain::class,
+            PreventAccessFromCentralDomains::class,
+            ScopeSessions::class, // https://tenancyforlaravel.com/docs/v3/session-scoping
         ])
+            ->name('nurse.')
+            ->prefix('nurse')
             ->namespace($this->moduleNamespace)
             ->group(module_path('Nurse', '/Routes/web.php'));
     }
@@ -70,6 +77,8 @@ class RouteServiceProvider extends ServiceProvider
                 'api',
                 PreventAccessFromCentralDomains::class
             ])
+            ->name('nurse.')
+            ->prefix('nurse')
             ->namespace($this->moduleNamespace)
             ->group(module_path('Nurse', '/Routes/api.php'));
     }

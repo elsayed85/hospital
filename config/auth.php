@@ -1,5 +1,9 @@
 <?php
 
+use Modules\Doctor\Entities\Doctor;
+use Modules\Employee\Entities\Employee;
+use Modules\Nurse\Entities\Nurse;
+
 return [
 
     /*
@@ -40,6 +44,21 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+
+        "doctor" => [
+            "driver" => "session",
+            "provider" => "doctors",
+        ],
+
+        "nurse" => [
+            "driver" => "session",
+            "provider" => "nurses",
+        ],
+
+        "employee" => [
+            "driver" => "session",
+            "provider" => "employees",
+        ],
     ],
 
     /*
@@ -65,10 +84,20 @@ return [
             'model' => App\Models\User::class,
         ],
 
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
+        "doctors" => [
+            'driver' => 'eloquent',
+            'model' => Doctor::class,
+        ],
+
+        "nurses" => [
+            'driver' => 'eloquent',
+            'model' => Nurse::class,
+        ],
+
+        "employees" => [
+            'driver' => 'eloquent',
+            'model' => Employee::class,
+        ],
     ],
 
     /*
@@ -92,6 +121,27 @@ return [
             'table' => 'password_resets',
             'expire' => 60,
             'throttle' => 60,
+        ],
+
+        "doctors" => [
+            "provider" => 'doctors',
+            "table" => 'doctors_password_resets',
+            "expire" => 60,
+            "throttle" => 60,
+        ],
+
+        "nurses" => [
+            "provider" => 'nurses',
+            "table" => 'nurses_password_resets',
+            "expire" => 60,
+            "throttle" => 60,
+        ],
+
+        "employees" => [
+            "provider" => 'employees',
+            "table" => 'employees_password_resets',
+            "expire" => 60,
+            "throttle" => 60,
         ],
     ],
 

@@ -15,7 +15,14 @@ return new class extends Migration
     {
         Schema::create('nurses', function (Blueprint $table) {
             $table->id();
-
+            $table->string('name');
+            $table->string('username');
+            $table->string('email')->unique()->nullable();
+            $table->string('nid')->nullable(); // National ID
+            $table->string('phone')->nullable();
+            $table->string('password');
+            $table->rememberToken();
+            $table->timestamp('email_verified_at')->nullable();
             $table->timestamps();
         });
     }

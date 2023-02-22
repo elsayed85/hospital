@@ -11,6 +11,6 @@
 |
 */
 
-Route::prefix('doctor')->group(function() {
-    Route::get('/', 'DoctorController@index');
-});
+use Modules\Doctor\Http\Controllers\HomeController;
+
+Route::get('/', [HomeController::class, "index"])->name('home');

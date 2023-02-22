@@ -2,8 +2,11 @@
 
 namespace Modules\Doctor\Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Seeder;
+use Modules\Doctor\Database\Seeders\RolesAndPermissionsSeeder;
+use Modules\Doctor\Entities\Doctor;
+use Spatie\Permission\Models\Role;
 
 class DoctorDatabaseSeeder extends Seeder
 {
@@ -14,8 +17,6 @@ class DoctorDatabaseSeeder extends Seeder
      */
     public function run()
     {
-        Model::unguard();
-
-        // $this->call("OthersTableSeeder");
+        $this->call(RolesAndPermissionsSeeder::class);
     }
 }

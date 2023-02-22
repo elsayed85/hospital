@@ -2,16 +2,13 @@
 
 declare(strict_types=1);
 
-use App\Models\Feature\Feature;
-use App\Models\Feature\FeatureUsage;
-use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Hospital\Auth\LoginController;
+use App\Http\Controllers\Hospital\MainController;
 use Illuminate\Support\Facades\Route;
-use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
-use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 
 /*
 |--------------------------------------------------------------------------
-| Tenant Routes
+| Hospital Routes
 |--------------------------------------------------------------------------
 |
 | Here you can register the tenant routes for your application.
@@ -21,6 +18,7 @@ use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 |
 */
 
-Route::get('/', function () {
-    dd(FeatureUsage::all());
-});
+Route::get('/', [MainController::class , "index"])->name("index");
+
+Route::get("login/{type?}", [LoginController::class, "showLoginFrom"])->name("login");
+Route::post("login", [LoginController::class, "login"])->name("login");

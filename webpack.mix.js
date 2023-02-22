@@ -83,7 +83,7 @@ mix.webpackConfig({
 function mixAssetsDir(query, cb) {
   (glob.sync('resources/assets/' + query) || []).forEach(f => {
     f = f.replace(/[\\\/]+/g, '/');
-    cb(f, f.replace('resources/assets/', 'public/assets/'));
+    cb(f, f.replace('resources/assets/', 'public/tenancy/assets/'));
   });
 }
 
@@ -129,9 +129,9 @@ mixAssetsDir('vendor/fonts/!(_)*.scss', (src, dest) =>
 mixAssetsDir('js/**/*.js', (src, dest) => mix.scripts(src, dest));
 mixAssetsDir('css/**/*.css', (src, dest) => mix.copy(src, dest));
 
-mix.copy('node_modules/boxicons/fonts/*', 'public/assets/vendor/fonts/boxicons');
-mix.copy('node_modules/@fortawesome/fontawesome-free/webfonts/*', 'public/assets/vendor/fonts/fontawesome');
-mix.copy('node_modules/katex/dist/fonts/*', 'public/assets/vendor/libs/quill/fonts');
+mix.copy('node_modules/boxicons/fonts/*', 'public/tenancy/assets/vendor/fonts/boxicons');
+mix.copy('node_modules/@fortawesome/fontawesome-free/webfonts/*', 'public/tenancy/assets/vendor/fonts/fontawesome');
+mix.copy('node_modules/katex/dist/fonts/*', 'public/tenancy/assets/vendor/libs/quill/fonts');
 
 mix.version();
 

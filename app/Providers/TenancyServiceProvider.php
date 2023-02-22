@@ -7,7 +7,9 @@ namespace App\Providers;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Spatie\Permission\PermissionRegistrar;
 use Stancl\JobPipeline\JobPipeline;
+use Stancl\Tenancy\Controllers\TenantAssetsController;
 use Stancl\Tenancy\Events;
 use Stancl\Tenancy\Jobs;
 use Stancl\Tenancy\Listeners;
@@ -80,10 +82,17 @@ class TenancyServiceProvider extends ServiceProvider
             Events\EndingTenancy::class => [],
             Events\TenancyEnded::class => [
                 Listeners\RevertToCentralContext::class,
+                function (Events\TenancyEnded $event) {
+                    \Spatie\Permission\PermissionRegistrar::$cacheKey = 'spatie.permission.cache';
+                }
             ],
 
             Events\BootstrappingTenancy::class => [],
-            Events\TenancyBootstrapped::class => [],
+            Events\TenancyBootstrapped::class => [
+                function (Events\TenancyBootstrapped $event) {
+                    PermissionRegistrar::$cacheKey = 'spatie.permission.cache.tenant.' . $event->tenancy->tenant->id;
+                }
+            ],
             Events\RevertingToCentralContext::class => [],
             Events\RevertedToCentralContext::class => [],
 
@@ -116,6 +125,8 @@ class TenancyServiceProvider extends ServiceProvider
         InitializeTenancyByDomain::$onFail = function ($exception, $request, $next) {
             return redirect(env('APP_URL'));
         };
+
+        TenantAssetsController::$tenancyMiddleware = InitializeTenancyByDomainOrSubdomain::class;
     }
 
     protected function bootEvents()
@@ -136,7 +147,7 @@ class TenancyServiceProvider extends ServiceProvider
         $files = glob(base_path('routes/hospital/*.php'));
         foreach ($files as $file) {
             Route::middleware([
-                'web',
+                "web",
                 InitializeTenancyByDomainOrSubdomain::class,
                 PreventAccessFromCentralDomains::class,
                 ScopeSessions::class, // https://tenancyforlaravel.com/docs/v3/session-scoping

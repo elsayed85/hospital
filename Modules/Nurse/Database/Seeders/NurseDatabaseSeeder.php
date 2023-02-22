@@ -2,8 +2,9 @@
 
 namespace Modules\Nurse\Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Seeder;
+use Modules\Nurse\Entities\Nurse;
 
 class NurseDatabaseSeeder extends Seeder
 {
@@ -16,6 +17,6 @@ class NurseDatabaseSeeder extends Seeder
     {
         Model::unguard();
 
-        // $this->call("OthersTableSeeder");
+        Nurse::factory()->count(10)->create();
     }
 }
