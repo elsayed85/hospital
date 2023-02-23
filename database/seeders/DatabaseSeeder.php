@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Modules\Doctor\Entities\Doctor;
 use Modules\Employee\Entities\Employee;
 use Modules\Nurse\Entities\Nurse;
@@ -27,6 +28,14 @@ class DatabaseSeeder extends Seeder
 
         $local_env = env('APP_ENV');
         if ($local_env == "local") {
+            // admin user
+            $admin = User::create([
+                'name' => 'Admin',
+                'email' => "admin@central.com",
+                'password' => Hash::make('password'),
+                'email_verified_at' => now(),
+            ]);
+
             // select databases that start with hospital
             $tenets = DB::select('SHOW DATABASES LIKE "hospital%"');
             foreach ($tenets as $tenet) {

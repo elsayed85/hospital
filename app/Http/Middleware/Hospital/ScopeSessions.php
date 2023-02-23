@@ -19,8 +19,10 @@ class ScopeSessions
             $request->session()->put(static::$tenantIdKey, tenant()->getTenantKey());
         } else {
             if ($request->session()->get(static::$tenantIdKey) !== tenant()->getTenantKey()) {
-                // refresh session
-                $request->session()->flush();
+                // logout all type of users
+                auth()->forgetGuards();
+                // invalidate session
+                $request->session()->invalidate();
                 // get first segment
                 $user_type = $request->segment(1);
                 // abort(403);

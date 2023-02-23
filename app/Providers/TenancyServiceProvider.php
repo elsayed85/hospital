@@ -8,6 +8,7 @@ use App\Http\Middleware\Hospital\ScopeSessions;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use Spatie\Permission\PermissionRegistrar;
 use Stancl\JobPipeline\JobPipeline;
 use Stancl\Tenancy\Controllers\TenantAssetsController;
@@ -151,8 +152,10 @@ class TenancyServiceProvider extends ServiceProvider
                 InitializeTenancyByDomainOrSubdomain::class,
                 PreventAccessFromCentralDomains::class,
                 ScopeSessions::class, // https://tenancyforlaravel.com/docs/v3/session-scoping
+                'localeSessionRedirect', 'localizationRedirect', 'localeViewPath'
             ])
                 ->name("hospital.")
+                ->prefix(LaravelLocalization::setLocale())
                 ->namespace(static::$controllerNamespace)
                 ->group($file);
         }

@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Config;
 function appClasses()
 {
 
-    $data = config('custom.custom');
+    $data = config('front_theme.custom');
 
     // default data array
     $DefaultData = [
@@ -155,8 +155,13 @@ function updatePageConfig($pageConfigs)
     if (isset($pageConfigs)) {
         if (count($pageConfigs) > 0) {
             foreach ($pageConfigs as $config => $val) {
-                Config::set('custom.' . $demo . '.' . $config, $val);
+                Config::set('front_theme.' . $demo . '.' . $config, $val);
             }
         }
     }
+}
+
+function currentLocaleDirection()
+{
+    return LaravelLocalization::getCurrentLocaleDirection();
 }

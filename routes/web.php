@@ -4,6 +4,12 @@ use App\Models\Doctor;
 use App\Models\Hospital;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
+use Sawirricardo\IcdApi\Connectors\AccessTokenConnector;
+use Sawirricardo\IcdApi\Connectors\IcdConnector;
+use Sawirricardo\IcdApi\IcdApi;
+use Sawirricardo\IcdApi\Requests\CreateAccessTokenRequest;
+use Sawirricardo\IcdApi\Requests\ViewEntityRequest;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -16,9 +22,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    $user = auth()->user();
-    $doctor = auth("doctor")->user();
-    $doctors = Doctor::all();
-    dd($user, $doctor, $doctors);
+Route::get('/{id}', function ($id) {
+
 });

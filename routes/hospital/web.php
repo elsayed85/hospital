@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [MainController::class , "index"])->name("index");
+Route::redirect('/', "login")->name("index");
 
 Route::get("login/{type?}", [LoginController::class, "showLoginFrom"])->name("login");
 Route::post("login", [LoginController::class, "login"])->name("login");

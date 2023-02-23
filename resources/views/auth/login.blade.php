@@ -5,7 +5,7 @@
 
 @extends('layouts/layoutMaster')
 
-@section('title', __("pages.login.title"))
+@section('title', __('pages.login.title'))
 
 @section('vendor-style')
     <!-- Vendor -->
@@ -30,15 +30,19 @@
     <script src="{{ asset('/vendor/libs/formvalidation/dist/js/plugins/AutoFocus.min.js') }}"></script>
     <script src="{{ asset('assets/vendor/libs/jquery-sticky/jquery-sticky.js') }}"></script>
     <script>
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
         // Check selected custom option
         window.Helpers.initCustomOptionCheck();
         @foreach ($types as $index => $type)
             $('#logout_btn_{{ $index }}').on('click', function() {
                 $.ajax({
-                    url: "{{ route($index. '.logout') }}",
+                    url: "{{ url("$index/logout") }}",
                     type: "POST",
                     data: {
-                        _token: "{{ csrf_token() }}",
                         type: "{{ $index }}"
                     },
                     success: function(response) {
@@ -84,26 +88,33 @@
                     </div>
                     <!-- /Logo -->
                     <h4 class="mb-2">{{ __('login.welcome_message') }} 👋</h4>
-                    <p class="mb-4">
-                        {{ __('login.welcome_message_description') }}
-                    </p>
+                    @if (!$disabled)
+                        <p class="mb-4">
+                            {{ __('login.welcome_message_description') }}
+                        </p>
+                    @endif
 
                     <form id="formAuthentication" class="mb-3" action="{{ route('hospital.login') }}" method="Post">
                         @csrf
-                        <h5 class="my-4">
-                            1. {{ __('login.select_your_account_type') }}
-                        </h5>
+                        @if (!$disabled)
+                            <h5 class="my-4">
+                                1. {{ __('login.select_your_account_type') }}
+                            </h5>
+                        @endif
                         <div class="row gy-3">
                             @foreach ($types as $index => $type)
-                                <div class="col-md">
+                            @php
+                                $logged_in = $logged_in_as[$index];
+                            @endphp
+                                <div class="col-md" @if($logged_in) onclick="location.href='{{ url("$index") }}'" @endif>
                                     <div class="form-check custom-option custom-option-icon">
                                         <label class="form-check-label custom-option-content" for="{{ $index }}">
                                             <span class="custom-option-body">
                                                 <i class='bx bx-briefcase-alt-2'></i>
                                                 <span class="custom-option-title"> {{ __($type['name']) }} </span>
-                                                @if (isset($type['hint']) && $logged_in_as[$index] == false)
+                                                @if (isset($type['hint']) && $logged_in == false)
                                                     <small>{{ __($type['hint']) }}</small>
-                                                @elseif ($logged_in_as[$index] == true)
+                                                @elseif ($logged_in == true)
                                                     <small>{{ __('login.already_logged_in') }}</small>
                                                     <button class="btn btn-danger d-grid w-100"
                                                         id="logout_btn_{{ $index }}">
@@ -111,7 +122,7 @@
                                                     </button>
                                                 @endif
                                             </span>
-                                            @if ($logged_in_as[$index] == false)
+                                            @if ($logged_in == false)
                                                 <input name="login_type" class="form-check-input" type="radio"
                                                     value="{{ $index }}" id="{{ $index }}" required
                                                     @if (old('login_type', $route_type) == $index) checked @endif />
@@ -122,44 +133,44 @@
                             @endforeach
                         </div>
                         <hr>
-                        @if(!$disabled)
-                        <h5 class="my-4">
-                            2. {{ __('login.enter_your_credentials') }}
-                        </h5>
-                        <div class="mb-3">
-                            <label for="login_key" class="form-label">
-                                {{ __('login.email_or_username') }}
-                            </label>
-                            <input type="text" class="form-control" id="login_key" name="login_key"
-                                placeholder="{{ __('login.email_or_username_placeholder') }}" autofocus required>
-                        </div>
-                        <div class="mb-3 form-password-toggle">
-                            <div class="d-flex justify-content-between">
-                                <label class="form-label" for="password">{{ __('login.password') }}</label>
-                                <a href="{{ url('auth/forgot-password-cover') }}">
-                                    <small>
-                                        {{ __('login.forgot_password') }}
-                                    </small>
-                                </a>
-                            </div>
-                            <div class="input-group input-group-merge">
-                                <input type="password" id="password" class="form-control" name="password"
-                                    placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
-                                    aria-describedby="password" required />
-                                <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="remember-me" name="remember">
-                                <label class="form-check-label" for="remember-me">
-                                    {{ __('login.remember_me') }}
+                        @if (!$disabled)
+                            <h5 class="my-4">
+                                2. {{ __('login.enter_your_credentials') }}
+                            </h5>
+                            <div class="mb-3">
+                                <label for="login_key" class="form-label">
+                                    {{ __('login.email_or_username') }}
                                 </label>
+                                <input type="text" class="form-control" id="login_key" name="login_key"
+                                    placeholder="{{ __('login.email_or_username_placeholder') }}" autofocus required>
                             </div>
-                        </div>
-                        <button class="btn btn-primary d-grid w-100">
-                            {{ __('login.login_button') }}
-                        </button>
+                            <div class="mb-3 form-password-toggle">
+                                <div class="d-flex justify-content-between">
+                                    <label class="form-label" for="password">{{ __('login.password') }}</label>
+                                    <a href="{{ url('auth/forgot-password-cover') }}">
+                                        <small>
+                                            {{ __('login.forgot_password') }}
+                                        </small>
+                                    </a>
+                                </div>
+                                <div class="input-group input-group-merge">
+                                    <input type="password" id="password" class="form-control" name="password"
+                                        placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
+                                        aria-describedby="password" required />
+                                    <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="remember-me" name="remember">
+                                    <label class="form-check-label" for="remember-me">
+                                        {{ __('login.remember_me') }}
+                                    </label>
+                                </div>
+                            </div>
+                            <button class="btn btn-primary d-grid w-100">
+                                {{ __('login.login_button') }}
+                            </button>
                         @endif
                     </form>
                 </div>

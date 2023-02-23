@@ -2,7 +2,7 @@
 
 <html lang="{{ session()->get('locale') ?? app()->getLocale() }}"
     class="{{ $configData['style'] }}-style {{ $navbarFixed ?? '' }} {{ $menuFixed ?? '' }} {{ $menuCollapsed ?? '' }} {{ $footerFixed ?? '' }} {{ $customizerHidden ?? '' }}"
-    dir="{{ $configData['textDirection'] }}"
+    dir="{{ currentLocaleDirection() }}"
     data-theme="{{ $configData['theme'] === 'theme-semi-dark' ? ($configData['layout'] !== 'horizontal' ? $configData['theme'] : 'theme-default') : $configData['theme'] }}"
     data-assets-path="{{ asset('') }}" data-base-url="{{ url('/') }}" data-framework="laravel"
     data-template="{{ $configData['layout'] . '-menu-' . $configData['theme'] . '-' . $configData['style'] }}">
@@ -15,8 +15,7 @@
     <title>@yield('title')</title>
     <meta name="description" content="" />
     <meta name="keywords" content="">
-    <!-- laravel CRUD token -->
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="csrf-token" content="{{ csrf_token() }}" />
     <!-- Canonical SEO -->
     <link rel="canonical" href="">
     <!-- Favicon -->

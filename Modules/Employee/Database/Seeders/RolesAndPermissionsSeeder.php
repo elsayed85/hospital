@@ -80,6 +80,13 @@ class RolesAndPermissionsSeeder extends Seeder
                 "guard_name" => $guard
             ]);
 
+            // reception
+
+            $reception = Role::create([
+                'name' => 'reception',
+                "guard_name" => $guard
+            ]);
+
 
             $admin = Role::create([
                 'name' => 'admin',

@@ -88,7 +88,7 @@ class RolesAndPermissionsSeeder extends Seeder
             $admin->givePermissionTo($admin_permissions);
 
             $super_admin = $roles->firstWhere('name', "=", "super admin");
-            $super_admin->givePermissionTo($all_permissions);
+            // $super_admin->givePermissionTo($all_permissions);
             // dd($admin->permissions->count() , $super_admin->permissions->count());
 
         });
