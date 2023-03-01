@@ -2,7 +2,10 @@
 
 use App\Models\Doctor;
 use App\Models\Hospital;
+use App\Models\ProjectFile;
 use App\Models\User;
+use App\Services\ICD\ICD;
+use App\Services\Locker;
 use Illuminate\Support\Facades\Route;
 use Sawirricardo\IcdApi\Connectors\AccessTokenConnector;
 use Sawirricardo\IcdApi\Connectors\IcdConnector;
@@ -22,6 +25,34 @@ use Sawirricardo\IcdApi\Requests\ViewEntityRequest;
 |
 */
 
-Route::get('/{id}', function ($id) {
+Route::get("", function () {
+    $db_files = ProjectFile::all(["file", "hash"]);
+    $locker = (new Locker())->setSecret("secret")->setDbFiles($db_files);
 
+    $installed_modules = $locker->getInstalledModulesWithHash();
+
+    $folders = [
+        // "app/Http/Controllers",
+        // "app/Http/Middleware",
+        // "app/Http/Requests",
+        // "app/Services",
+        // "app/Traits",
+        // "app/Providers",
+        // "config",
+        // "database/migrations",
+        // "database/seeders",
+        "Modules",
+        "routes",
+    ];
+
+    foreach ($folders as $dir) {
+        $check[$dir] = $locker->setDirectory($dir)->compute();
+    }
+
+
+
+    return [
+        "installed_modules" => $installed_modules,
+        "check" => $check,
+    ];
 });

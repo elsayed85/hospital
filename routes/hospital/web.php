@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 | Hospital Routes
 |--------------------------------------------------------------------------
-|
+
 | Here you can register the tenant routes for your application.
 | These routes are loaded by the TenantRouteServiceProvider.
 |
@@ -18,7 +18,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::redirect('/', "login")->name("index");
+Route::get("/", [MainController::class, "index"])->name("index");
+
+// Route::redirect('/', "login")->name("index");
 
 Route::get("login/{type?}", [LoginController::class, "showLoginFrom"])->name("login");
 Route::post("login", [LoginController::class, "login"])->name("login");
